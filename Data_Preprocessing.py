@@ -88,7 +88,7 @@ def plot_word_cloud(df : pd.DataFrame, col_name : str, label : str):
     plt.show()
     print()
 
-def split_data(features, target, val_size = 0.1, test_size = 0.1):
+def split_data(features, target, val_size = 0.15, test_size = 0.15):
     X_train, X_temp, Y_train, Y_temp = train_test_split(features,
                                                   target,
                                                   test_size=val_size+test_size,
