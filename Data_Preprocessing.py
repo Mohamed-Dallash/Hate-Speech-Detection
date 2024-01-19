@@ -10,20 +10,6 @@ from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
-# import numpy as np
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sb
-# from sklearn.model_selection import train_test_split
- 
-# # Text Pre-processing libraries
-# import nltk
-# import string
-# import warnings
-# from nltk.corpus import stopwords
-# from nltk.stem import WordNetLemmatizer
-# from wordcloud import WordCloud
-
 nltk.download('stopwords')
 nltk.download('omw-1.4')
 nltk.download('wordnet')
@@ -104,32 +90,19 @@ def split_data(features, target, val_size = 0.15, test_size = 0.15):
 def one_hot_encode(data):
     return pd.get_dummies(data)
 
-def generate_token_embeddings(train,val,test, max_words = 5000, max_len = 50):
+def generate_token_embeddings(data, max_words = 5000, max_len = 50):
 
     token = Tokenizer(num_words=max_words,
                     lower=True,
-                    split=' ')
+                    split=' ',
+                    )
     
-    token.fit_on_texts(train)
+    token.fit_on_texts(data)
 
-
-    Training_seq = token.texts_to_sequences(train)
-    Training_pad = pad_sequences(Training_seq,
-                                maxlen=max_len,
-                                padding='post',
-                                truncating='post')
+    seq = token.texts_to_sequences(data)
+    pad = pad_sequences(seq,
+                        maxlen=max_len,
+                        padding='post',
+                        truncating='post')
     
-
-    Vaidation_seq = token.texts_to_sequences(val)
-    Validation_pad = pad_sequences(Vaidation_seq,
-                                maxlen=max_len,
-                                padding='post',
-                                truncating='post')
-
-    Testing_seq = token.texts_to_sequences(test)
-    Testing_pad = pad_sequences(Testing_seq,
-                                maxlen=max_len,
-                                padding='post',
-                                truncating='post')
-    
-    return Training_pad, Validation_pad, Testing_pad
+    return pad

@@ -12,17 +12,15 @@ class First_Dataset:
         remove_stopwords(self.df, 'tweet')
     
     def split(self, val_size = 0.1, test_size = 0.1):
-        features = self.df['tweet']
-        target = self.df['class']
+        features = self.embedded_tweets
+        target = self.encoded_labels
         self.X_train, self.X_val, self.X_test, self.Y_train, self.Y_val, self.Y_test = split_data(features,target,val_size,test_size)
     
     def encode_labels(self):
-        self.Y_train = one_hot_encode(self.Y_train)
-        self.Y_val = one_hot_encode(self.Y_val)
-        self.Y_test = one_hot_encode(self.Y_test)
+        self.encoded_labels = one_hot_encode(self.df['class'])
 
     def embed_tokens(self, max_words, max_len):
-        self.Training_pad, self.Validation_pad, self.Testing_pad = generate_token_embeddings(self.X_train,self.X_val,self.X_test,max_words,max_len)
+        self.embedded_tweets = generate_token_embeddings(self.df['tweet'], max_words, max_len)
 
     def getData(self):
-        return self.Training_pad, self.Validation_pad, self.Testing_pad, self.Y_train, self.Y_val, self.Y_test
+        return self.X_train, self.X_val, self.X_test, self.Y_train, self.Y_val, self.Y_test
