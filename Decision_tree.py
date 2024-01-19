@@ -11,7 +11,6 @@ class DecisionTreeClassifier():
 
 	def __init__(self, max_depth = None, min_samples_split = 2, 
 	min_samples_leaf = 1, max_leaf_nodes = None):
-		self.type = "decisiontree"
 		self.model = tree.DecisionTreeClassifier(criterion = "entropy", max_depth= max_depth, 
 		min_samples_split= min_samples_split, min_samples_leaf=min_samples_leaf, max_leaf_nodes=max_leaf_nodes)
 
