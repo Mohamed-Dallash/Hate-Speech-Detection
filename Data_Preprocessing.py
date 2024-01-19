@@ -9,6 +9,8 @@ from wordcloud import WordCloud
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+import re
+import contractions
 
 nltk.download('stopwords')
 nltk.download('omw-1.4')
@@ -19,11 +21,36 @@ def convertLowerCase(df : pd.DataFrame, col_name : str):
     df[col_name] = df[col_name].str.lower()
 
 def remove_punctuation(df : pd.DataFrame, col_name : str):
+    punctuations = string.punctuation.replace('@','')
     def punctuation_remover(text):
-        temp = str.maketrans('', '', string.punctuation)
+        temp = str.maketrans('', '', punctuations)
         return text.translate(temp)
     
     df[col_name] = df[col_name].apply(lambda text: punctuation_remover(text))
+
+def remove_at_symbols(df : pd.DataFrame, col_name : str):
+    df[col_name] = df[col_name].apply(lambda text: re.sub('@(?!(user))','',str(text)))
+
+def remove_numbers(df : pd.DataFrame, col_name : str):
+    df[col_name] = df[col_name].apply(lambda text: ''.join([i for i in text if not i.isdigit()]))
+
+def remove_retweet_label(df : pd.DataFrame, col_name : str):
+    df[col_name] = df[col_name].apply(lambda text: re.sub('(RT @[\w_]+:?)','', str(text)))
+
+def remove_URL(df : pd.DataFrame, col_name : str):
+    df[col_name] = df[col_name].apply(lambda text: re.sub('((www\.[^\s]+)|(https?://[^\s]+))','',str(text)))
+
+def replaceAtUser(df : pd.DataFrame, col_name : str):
+    def atUser_replacer(text):
+        text = re.sub('@[^\s]+:','',str(text))
+        text = re.sub('@[^\s]+','@user',str(text))
+        return text
+    
+    df[col_name] = df[col_name].apply(lambda text: atUser_replacer(text))
+
+def remove_contractions(df : pd.DataFrame, col_name : str):
+
+    df[col_name] = df[col_name].apply(lambda text: ' '.join([contractions.fix(word) for word in str(text).split()]))
 
 def remove_stopwords(df : pd.DataFrame, col_name : str):
     def stopwords_remover(text):

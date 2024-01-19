@@ -7,8 +7,14 @@ class First_Dataset:
     
     def preprocess(self):
         self.df = self.df[self.df['class']!=1]
+        remove_retweet_label(self.df,"tweet")
+        remove_URL(self.df,"tweet")
+        replaceAtUser(self.df,"tweet")
+        remove_contractions(self.df,"tweet")
         convertLowerCase(self.df,"tweet")
         remove_punctuation(self.df,'tweet')
+        remove_at_symbols(self.df,'tweet')
+        remove_numbers(self.df,"tweet")
         remove_stopwords(self.df, 'tweet')
     
     def split(self, val_size = 0.1, test_size = 0.1):
