@@ -5,6 +5,9 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 import pandas as pd
 import matplotlib.pyplot as plt
 
+import numpy as np
+from sklearn.metrics import classification_report
+
 class BiLSTM():
     
     def __init__(self, max_words, max_len) -> None:
@@ -21,7 +24,7 @@ class BiLSTM():
                     optimizer='adam',
                     metrics=['accuracy'])
         
-        self.es = EarlyStopping(patience=3,
+        self.es = EarlyStopping(patience=5,
                    monitor = 'val_accuracy',
                    restore_best_weights = True)
  
@@ -55,4 +58,7 @@ class BiLSTM():
         plt.show()
     
     def test(self, testing_data, testing_labels):
-        self.model.evaluate(testing_data,testing_labels)
+        testing_labels = np.where(testing_labels==True)[1]
+        y_pred = self.model.predict(testing_data)
+        y_pred_bool = np.argmax(y_pred, axis=1)
+        print(classification_report(testing_labels, y_pred_bool))
