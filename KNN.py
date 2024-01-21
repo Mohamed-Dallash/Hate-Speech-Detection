@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from First_Dataset import First_Dataset
 from Second_Dataset import Second_Dataset
 from Data_Preprocessing import *
+from sklearn.metrics import classification_report
 
 class KNN():
 	
@@ -41,10 +42,10 @@ trainingLabels, validationLabels, testingLabels):
 			"name": "K",
 			"dims":plots[0, 0:2],
 			"x_label": "K values",
-			"x_content" :[i for i in range (2, 21)],
+			"x_content" :[i for i in range (5, 30)],
 			"plot_title": "Accuracy change with different k values",
 			"values": [
-				[i, "euclidean"] for i in range (2, 21)
+				[i, "euclidean"] for i in range (5, 30)
 			],
 			"stats" : []
 		}	
@@ -76,7 +77,7 @@ trainingLabels, validationLabels, testingLabels):
 			y = hyperparameter["stats"]
 			f.plot(x,y)
 			f.set_xticks(hyperparameter["x_content"])
-			f.set_yticks(list(range(0,100,10)))
+			f.set_yticks(list(range(50,100,10)))
 			for index in range(len(x)):
 				f.text(x[index], y[index], y[index], size=10)
 
@@ -93,7 +94,7 @@ trainingLabels, validationLabels, testingLabels):
 
 	print("Testing with the tuned hyperparameters...")
 	guesses = classify_with_tuned_params(trainingData, trainingLabels, testingData, tuned_params=tuned_params)
-	calcAccuracy(guesses=guesses, correctLabels=testingLabels)
+	print(classification_report(testingLabels, guesses))
 
 
 # dataset = First_Dataset()

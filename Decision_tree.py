@@ -2,8 +2,10 @@
 import matplotlib.pyplot as plt
 from sklearn import tree
 from sklearn.metrics import accuracy_score
-
+from Second_Dataset import Second_Dataset
 from First_Dataset import First_Dataset
+from Data_Preprocessing import *
+from sklearn.metrics import classification_report
 
 tuned_params = [13, 9, 16, 6]
 
@@ -57,8 +59,8 @@ trainingLabels, validationLabels, testingLabels):
 			"dims":plots[0, 0:1],
 			"x_label": "max depth",
 			"plot_title":"Accuracy of different max depths",
-			"x_content" :list(range(1,20)),
-			"values": [[i, 2,1,None] for i in range(1,20)],
+			"x_content" :list(range(1,15)),
+			"values": [[i, 2,1,None] for i in range(1,15)],
 			"stats" : [],
 		},
 		{
@@ -67,8 +69,8 @@ trainingLabels, validationLabels, testingLabels):
 			"dims":plots[0, 1:2],
 			"x_label": "min samples split",
 			"plot_title":"Accuracy of different sample splits",
-			"x_content" :list(range(2,20)),
-			"values": [[None, i,1,None] for i in range(2,20)],
+			"x_content" :list(range(2,15)),
+			"values": [[None, i,1,None] for i in range(2,15)],
 			"stats" : [],
 		},
 		{
@@ -77,8 +79,8 @@ trainingLabels, validationLabels, testingLabels):
 			"dims":plots[1, 0:1],
 			"x_label": "min samples leaf",
 			"plot_title":"Accuracy of different samples in leafs",
-			"x_content" :list(range(1,20)),
-			"values": [[None, 2,i,None] for i in range(1,20)],
+			"x_content" :list(range(1,15)),
+			"values": [[None, 2,i,None] for i in range(1,15)],
 			"stats" : [],
 		},		
 		{
@@ -87,8 +89,8 @@ trainingLabels, validationLabels, testingLabels):
 			"dims":plots[1, 1:2],
 			"x_label": "max leaf nodes",
 			"plot_title":"Accuracy of different leaf nodes",
-			"x_content" :list(range(2,20)),
-			"values": [[None, 2,1,i] for i in range(2,20)],
+			"x_content" :list(range(2,15)),
+			"values": [[None, 2,1,i] for i in range(2,15)],
 			"stats" : [],
 		},		
 
@@ -139,21 +141,17 @@ trainingLabels, validationLabels, testingLabels):
 	print("Testing with the tuned hyperparameters...")
 	tuned_params= bestValues
 	guesses = classify_with_tuned_params( trainingData, trainingLabels, testingData)
-	calcAccuracy(guesses=guesses, correctLabels=testingLabels)	
-
-				
+	print(classification_report(testingLabels, guesses))
 
 
-max_words = 5000
-max_len = 50
 
 dataset = First_Dataset()
+# dataset = Second_Dataset()
 dataset.preprocess()
-dataset.encode_labels()
-dataset.embed_tokens(max_words,max_len)
-dataset.split()
 
+dataset.split_2()
 Training_pad, Validation_pad, Testing_pad, Y_train, Y_val, Y_test = dataset.getData()
 
-# print (Training_pad.shape)
-runDecisionTree (Training_pad, Validation_pad, Testing_pad, Y_train, Y_val, Y_test)
+X_train_tfidf, X_val_tfidf, X_test_tfidf = convert_to_tfidf(Training_pad, Validation_pad, Testing_pad)
+
+runDecisionTree (X_train_tfidf, X_val_tfidf, X_test_tfidf, Y_train, Y_val, Y_test)
