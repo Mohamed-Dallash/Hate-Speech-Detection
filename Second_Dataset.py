@@ -31,7 +31,3 @@ class Second_Dataset:
     def getData(self):
         return self.X_train, self.X_val, self.X_test, self.Y_train, self.Y_val, self.Y_test
     
-    def split_2(self, val_size = 0.1, test_size = 0.1):
-        features = self.df['text']
-        target = self.df['task_1']
-        self.X_train, self.X_val, self.X_test, self.Y_train, self.Y_val, self.Y_test = split_data(features,target,val_size,test_size)
