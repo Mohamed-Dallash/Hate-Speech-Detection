@@ -11,6 +11,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import re
 import contractions
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 nltk.download('stopwords')
 nltk.download('omw-1.4')
@@ -154,3 +155,11 @@ def generate_token_embeddings(data, max_words = 5000, max_len = 50):
                         truncating='post')
     
     return pad
+
+
+def convert_to_tfidf(X_train, X_val, X_test, max_features=5000):
+    vectorizer = TfidfVectorizer(max_features=max_features)
+    X_train_tfidf = vectorizer.fit_transform(X_train)
+    X_val_tfidf = vectorizer.transform(X_val)
+    X_test_tfidf = vectorizer.transform(X_test)
+    return X_train_tfidf, X_val_tfidf, X_test_tfidf

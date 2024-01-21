@@ -3,7 +3,8 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from matplotlib import pyplot as plt
 from First_Dataset import First_Dataset
-
+from Second_Dataset import Second_Dataset
+from Data_Preprocessing import *
 
 class KNN():
 	
@@ -93,17 +94,16 @@ trainingLabels, validationLabels, testingLabels):
 	print("Testing with the tuned hyperparameters...")
 	guesses = classify_with_tuned_params(trainingData, trainingLabels, testingData, tuned_params=tuned_params)
 	calcAccuracy(guesses=guesses, correctLabels=testingLabels)
-	
-max_words = 5000
-max_len = 50
 
-dataset = First_Dataset()
+
+# dataset = First_Dataset()
+dataset = Second_Dataset()
 dataset.preprocess()
-dataset.encode_labels()
-dataset.embed_tokens(max_words,max_len)
-dataset.split()
 
+dataset.split_2()
 Training_pad, Validation_pad, Testing_pad, Y_train, Y_val, Y_test = dataset.getData()
 
-# print (Training_pad.shape)
-runKNN (Training_pad, Validation_pad, Testing_pad, Y_train, Y_val, Y_test)
+X_train_tfidf, X_val_tfidf, X_test_tfidf = convert_to_tfidf(Training_pad, Validation_pad, Testing_pad)
+
+
+runKNN (X_train_tfidf, X_val_tfidf, X_test_tfidf, Y_train, Y_val, Y_test)
