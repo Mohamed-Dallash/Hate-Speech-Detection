@@ -16,7 +16,7 @@ class RNN():
             layers.SimpleRNN(16),
             layers.Dense(512, activation='relu', kernel_regularizer='l1'),
             layers.BatchNormalization(),
-            layers.Dropout(0.3),
+            layers.Dropout(0.5),
             layers.Dense(2, activation='softmax')
         ])
         
